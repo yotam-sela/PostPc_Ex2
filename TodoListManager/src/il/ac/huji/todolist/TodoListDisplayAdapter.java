@@ -2,6 +2,7 @@ package il.ac.huji.todolist;
 
 import java.util.List;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,11 @@ public class TodoListDisplayAdapter extends ArrayAdapter<String> {
 		LayoutInflater inflater = LayoutInflater.from(getContext());
 		View view = inflater.inflate(R.layout.row, null);
 		TextView todoTaskName = (TextView)view.findViewById(R.id.todoTaskName);
+		if(position % 2 == 0){
+			todoTaskName.setTextColor(Color.RED);		
+		}else{
+			todoTaskName.setTextColor(Color.BLUE);
+		}
 		todoTaskName.setText(todoTask);
 		return view;
 	}

@@ -5,10 +5,9 @@ import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -21,7 +20,13 @@ public class TodoListManagerActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_todo_list_manager);
-		//setContentView(R.menu.todo_list_manager);
+
+
+
+		Log.d("TodoListManagerActivity","I am here d");
+		Log.v("TodoListManagerActivity","I am here v");
+		Log.e("TodoListManagerActivity","I am here e");
+		Log.i("TodoListManagerActivity","I am here i");
 
 		List<String> todoList = new ArrayList<String>();
 
@@ -32,7 +37,7 @@ public class TodoListManagerActivity extends Activity {
 
 //		findViewById(R.id.menuItemAdd).setOnClickListener(
 //				new OnClickListener(){
-//					
+//
 //					@Override
 //					public void onClick(View v) {
 //						EditText newTaskTodoView = (EditText)findViewById(R.id.edtNewItem);
@@ -56,7 +61,23 @@ public class TodoListManagerActivity extends Activity {
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		System.out.println("item.getItemId(): "+ item.getItemId());
-		//switch (item.getItemId())
+		switch (item.getItemId())
+		{
+		case R.id.menuItemAdd:
+			EditText newTaskTodoView = (EditText)findViewById(R.id.edtNewItem);
+			String newTaskTodo = newTaskTodoView.getText().toString();
+			adapter.add(newTaskTodo);
+			break;
+		
+		case R.id.menuItemDelete:
+			ListView todoListView = (ListView)findViewById(R.id.lstTodoItems);
+			if(!todoListView.getAdapter().isEmpty())
+			{
+				int selectedItemIndex = todoListView.getChoiceMode();
+				adapter.remove(adapter.getItem(selectedItemIndex));
+			}
+			break;
+		}
 		return true;
 	}
 
