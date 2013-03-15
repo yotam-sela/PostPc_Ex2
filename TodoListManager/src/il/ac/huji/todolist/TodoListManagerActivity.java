@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -34,19 +35,6 @@ public class TodoListManagerActivity extends Activity {
 
 		adapter = new TodoListDisplayAdapter(this,todoList);
 		todoListView.setAdapter(adapter);
-
-//		findViewById(R.id.menuItemAdd).setOnClickListener(
-//				new OnClickListener(){
-//
-//					@Override
-//					public void onClick(View v) {
-//						EditText newTaskTodoView = (EditText)findViewById(R.id.edtNewItem);
-//						String newTaskTodo = newTaskTodoView.getText().toString();
-//						adapter.add(newTaskTodo);
-//					}
-//
-//				});
-
 	}
 
 
@@ -60,7 +48,6 @@ public class TodoListManagerActivity extends Activity {
 	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
-		System.out.println("item.getItemId(): "+ item.getItemId());
 		switch (item.getItemId())
 		{
 		case R.id.menuItemAdd:
@@ -73,8 +60,11 @@ public class TodoListManagerActivity extends Activity {
 			ListView todoListView = (ListView)findViewById(R.id.lstTodoItems);
 			if(!todoListView.getAdapter().isEmpty())
 			{
-				int selectedItemIndex = todoListView.getChoiceMode();
-				adapter.remove(adapter.getItem(selectedItemIndex));
+				int selectedItemIndex = todoListView.getSelectedItemPosition();
+				if(selectedItemIndex != AdapterView.INVALID_POSITION)
+				{
+					adapter.remove(adapter.getItem(selectedItemIndex));
+				}
 			}
 			break;
 		}
