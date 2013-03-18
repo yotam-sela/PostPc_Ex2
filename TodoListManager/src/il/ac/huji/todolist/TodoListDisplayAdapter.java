@@ -9,16 +9,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class TodoListDisplayAdapter extends ArrayAdapter<String> {
+public class TodoListDisplayAdapter extends ArrayAdapter<TodoHolder> {
 	
 	public TodoListDisplayAdapter(
-			TodoListManagerActivity activity, List<String> todoList) {
+			TodoListManagerActivity activity, List<TodoHolder> todoList) {
 		super(activity, android.R.layout.activity_list_item, todoList);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		String todoTask = getItem(position);
+		TodoHolder todoTask = getItem(position);
 		LayoutInflater inflater = LayoutInflater.from(getContext());
 		View view = inflater.inflate(R.layout.row, null);
 		TextView todoTaskName = (TextView)view.findViewById(R.id.todoTaskName);

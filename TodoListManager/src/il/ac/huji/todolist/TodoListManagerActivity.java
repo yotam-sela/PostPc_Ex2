@@ -6,16 +6,19 @@ import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
+import android.view.View;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
 public class TodoListManagerActivity extends Activity {
 
-	private ArrayAdapter<String> adapter;
+	private ArrayAdapter<TodoHolder> adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +32,41 @@ public class TodoListManagerActivity extends Activity {
 		Log.e("TodoListManagerActivity","I am here e");
 		Log.i("TodoListManagerActivity","I am here i");
 
-		List<String> todoList = new ArrayList<String>();
+		List<TodoHolder> todoList = new ArrayList<TodoHolder>();
 
 		ListView todoListView = (ListView)findViewById(R.id.lstTodoItems);
 
 		adapter = new TodoListDisplayAdapter(this,todoList);
 		todoListView.setAdapter(adapter);
+
+		registerForContextMenu(todoListView);
+
 	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo info) {
+		menu.setHeaderTitle("title");
+		menu.setHeaderIcon(0);
+		getMenuInflater().inflate(R.menu.contex_menu, menu);
+	}
+	
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo)
+				item.getMenuInfo();
+		int selectedItemIndex = info.position;
+		switch (item.getItemId()){
+		case R.id.menuItemDelete:
+			adapter.remove(adapter.getItem(selectedItemIndex));
+			break;
+		case R.id.menuItemCall:
+			Log.d("onContextItemSelected","Call, not supporeted currently"); //TODO: add support.
+			break;
+		}
+		return true;
+	}
+
 
 
 
@@ -54,18 +85,6 @@ public class TodoListManagerActivity extends Activity {
 			EditText newTaskTodoView = (EditText)findViewById(R.id.edtNewItem);
 			String newTaskTodo = newTaskTodoView.getText().toString();
 			adapter.add(newTaskTodo);
-			break;
-		
-		case R.id.menuItemDelete:
-			ListView todoListView = (ListView)findViewById(R.id.lstTodoItems);
-			if(!todoListView.getAdapter().isEmpty())
-			{
-				int selectedItemIndex = todoListView.getSelectedItemPosition();
-				if(selectedItemIndex != AdapterView.INVALID_POSITION)
-				{
-					adapter.remove(adapter.getItem(selectedItemIndex));
-				}
-			}
 			break;
 		}
 		return true;

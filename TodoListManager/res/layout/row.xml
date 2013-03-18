@@ -2,13 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="horizontal" 
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    
+    
+    >
     
     <TextView
-        android:id="@+id/todoTaskName"
+        android:id="@+id/txtTodoTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Large Text" 
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:paddingEnd="100dp" />
+
+    <TextView
+        android:id="@+id/txtTodoDueDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
     
 </LinearLayout>
