@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class TodoListDisplayAdapter extends ArrayAdapter<TodoHolder> {
-	
+
 	public TodoListDisplayAdapter(
 			TodoListManagerActivity activity, List<TodoHolder> todoList) {
 		super(activity, android.R.layout.activity_list_item, todoList);
@@ -24,30 +24,30 @@ public class TodoListDisplayAdapter extends ArrayAdapter<TodoHolder> {
 		TodoHolder todoTask = getItem(position);
 		LayoutInflater inflater = LayoutInflater.from(getContext());
 		View view = inflater.inflate(R.layout.row, null);
-		
+
 		TextView todoName = (TextView)view.findViewById(R.id.txtTodoTitle);
+		todoName.setText(todoTask.title);
+
+
 		TextView todoDate = (TextView)view.findViewById(
 				R.id.txtTodoDueDate);
-		todoName.setText(todoTask.title);
-		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		todoDate.setText(df.format(todoTask.dueDate));
-		
-		Date currentDate = new Date();
-		if(currentDate.after(todoTask.dueDate))
+		if(todoTask.dueDate == null)
 		{
-			todoDate.setTextColor(Color.RED);
+			todoDate.setText("No due date");
+		}
+		else
+		{
+			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+			todoDate.setText(df.format(todoTask.dueDate));
+
+			//setting the color for pass due tasks.
+			Date currentDate = new Date();
+			if(currentDate.after(todoTask.dueDate))
+			{
+				todoDate.setTextColor(Color.RED);
+			}
 		}
 		return view;
-		
-		
-//		TextView todoTaskName = (TextView)view.findViewById(R.id.todoTaskName);
-//		if(position % 2 == 0){
-//			todoTaskName.setTextColor(Color.RED);		
-//		}else{
-//			todoTaskName.setTextColor(Color.BLUE);
-//		}
-//		todoTaskName.setText(todoTask);
-//		return view;
 	}
 
 }

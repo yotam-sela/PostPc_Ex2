@@ -27,14 +27,7 @@ public class TodoListManagerActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_todo_list_manager);
-		
-
-
-
-		Log.d("TodoListManagerActivity","I am here d");
-		Log.v("TodoListManagerActivity","I am here v");
-		Log.e("TodoListManagerActivity","I am here e");
-		Log.i("TodoListManagerActivity","I am here i");
+	
 
 		List<TodoHolder> todoList = new ArrayList<TodoHolder>();
 
