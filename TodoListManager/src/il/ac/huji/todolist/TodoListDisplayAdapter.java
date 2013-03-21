@@ -45,6 +45,7 @@ public class TodoListDisplayAdapter extends ArrayAdapter<TodoHolder> {
 			if(currentDate.after(todoTask.dueDate))
 			{
 				todoDate.setTextColor(Color.RED);
+				todoName.setTextColor(Color.RED);
 			}
 		}
 		return view;
