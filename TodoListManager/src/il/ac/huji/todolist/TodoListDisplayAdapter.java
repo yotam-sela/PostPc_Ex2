@@ -1,5 +1,8 @@
 package il.ac.huji.todolist;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import android.graphics.Color;
@@ -21,14 +24,30 @@ public class TodoListDisplayAdapter extends ArrayAdapter<TodoHolder> {
 		TodoHolder todoTask = getItem(position);
 		LayoutInflater inflater = LayoutInflater.from(getContext());
 		View view = inflater.inflate(R.layout.row, null);
-		TextView todoTaskName = (TextView)view.findViewById(R.id.todoTaskName);
-		if(position % 2 == 0){
-			todoTaskName.setTextColor(Color.RED);		
-		}else{
-			todoTaskName.setTextColor(Color.BLUE);
+		
+		TextView todoName = (TextView)view.findViewById(R.id.txtTodoTitle);
+		TextView todoDate = (TextView)view.findViewById(
+				R.id.txtTodoDueDate);
+		todoName.setText(todoTask.title);
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		todoDate.setText(df.format(todoTask.dueDate));
+		
+		Date currentDate = new Date();
+		if(currentDate.after(todoTask.dueDate))
+		{
+			todoDate.setTextColor(Color.RED);
 		}
-		todoTaskName.setText(todoTask);
 		return view;
+		
+		
+//		TextView todoTaskName = (TextView)view.findViewById(R.id.todoTaskName);
+//		if(position % 2 == 0){
+//			todoTaskName.setTextColor(Color.RED);		
+//		}else{
+//			todoTaskName.setTextColor(Color.BLUE);
+//		}
+//		todoTaskName.setText(todoTask);
+//		return view;
 	}
 
 }

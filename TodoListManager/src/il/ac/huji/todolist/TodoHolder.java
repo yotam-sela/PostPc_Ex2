@@ -2,13 +2,13 @@ package il.ac.huji.todolist;
 
 public class TodoHolder {
 	
-	private String title;
-	private String date;
+	public String title;
+	public java.util.Date dueDate;
 	
-	public TodoHolder(String title, String date) {
+	public TodoHolder(String title, java.util.Date dueDate) {
 		super();
 		this.title = title;
-		this.date = date;
+		this.dueDate = dueDate;
 	}
 	
 	

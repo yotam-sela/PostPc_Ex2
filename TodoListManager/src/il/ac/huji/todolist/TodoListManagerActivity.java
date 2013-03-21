@@ -1,9 +1,11 @@
 package il.ac.huji.todolist;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -11,9 +13,9 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 
 public class TodoListManagerActivity extends Activity {
@@ -23,7 +25,9 @@ public class TodoListManagerActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_todo_list_manager);
+		
 
 
 
@@ -82,12 +86,31 @@ public class TodoListManagerActivity extends Activity {
 		switch (item.getItemId())
 		{
 		case R.id.menuItemAdd:
-			EditText newTaskTodoView = (EditText)findViewById(R.id.edtNewItem);
-			String newTaskTodo = newTaskTodoView.getText().toString();
-			adapter.add(newTaskTodo);
-			break;
+
+			Intent intent = new Intent(this, AddNewTodoItemActivity.class);
+    		startActivityForResult(intent, 1337);
+    		break;
+			
+//			EditText newTaskTodoView = (EditText)findViewById(R.id.edtNewItem);
+//			String newTaskTodo = newTaskTodoView.getText().toString();
+//			adapter.add(newTaskTodo);
+//			break;
 		}
 		return true;
 	}
+	
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	if (requestCode == 1337 && resultCode == RESULT_OK) {
+    		String title = data.getStringExtra("title");
+    		java.util.Date dueDate = (Date) data.getSerializableExtra("dueDate");
+    		
+    		adapter.add(new TodoHolder(title, dueDate));
+    	}
+    	else
+    	{
+    		Log.d("TodoListManagerActivity","result failed.");
+    	}
+    }
 
 }

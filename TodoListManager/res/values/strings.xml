@@ -6,7 +6,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="add_string">Add</string>
     <string name="delete_string">Delete</string>
-    
-    
+    <string name="title_activity_add_new_todo_item">AddNewTodoItemActivity</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="ok_button">OK</string>
 
 </resources>
