@@ -19,6 +19,13 @@ public class AddNewTodoItemActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_add_new_todo_item);
 		
+		findViewById(R.id.btnCancel).setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				setResult(RESULT_CANCELED);
+				finish();
+			}
+		});
+		
 		
 		findViewById(R.id.btnOK).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
