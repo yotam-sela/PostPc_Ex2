@@ -29,7 +29,6 @@ public class TodoListManagerActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_todo_list_manager);
 	
-
 		List<TodoHolder> todoList = new ArrayList<TodoHolder>();
 
 		ListView todoListView = (ListView)findViewById(R.id.lstTodoItems);
@@ -58,13 +57,8 @@ public class TodoListManagerActivity extends Activity {
 		else
 		{	
 			menu.removeItem(R.id.menuItemCall);	
-		}
-		
-		
-		
-		
+		}	
 	}
-	
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
@@ -86,10 +80,6 @@ public class TodoListManagerActivity extends Activity {
 		}
 		return true;
 	}
-
-
-
-
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

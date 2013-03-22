@@ -28,7 +28,6 @@ public class TodoListDisplayAdapter extends ArrayAdapter<TodoHolder> {
 		TextView todoName = (TextView)view.findViewById(R.id.txtTodoTitle);
 		todoName.setText(todoTask.title);
 
-
 		TextView todoDate = (TextView)view.findViewById(
 				R.id.txtTodoDueDate);
 		if(todoTask.dueDate == null)
@@ -40,7 +39,6 @@ public class TodoListDisplayAdapter extends ArrayAdapter<TodoHolder> {
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 			todoDate.setText(df.format(todoTask.dueDate));
 
-			//setting the color for pass due tasks.
 			Date currentDate = new Date();
 			if(currentDate.after(todoTask.dueDate))
 			{
