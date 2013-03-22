@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -42,9 +43,26 @@ public class TodoListManagerActivity extends Activity {
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo info) {
-		menu.setHeaderTitle("title");
-		menu.setHeaderIcon(0);
 		getMenuInflater().inflate(R.menu.contex_menu, menu);
+		
+		AdapterContextMenuInfo adapterInfo = (AdapterContextMenuInfo)info;		
+		int pos = adapterInfo.position;
+		String title = adapter.getItem(pos).title;
+		menu.setHeaderTitle(title);
+
+		if(title.startsWith("Call "))
+		{
+		    MenuItem item = menu.getItem(1);
+		    item.setTitle(title);
+		}
+		else
+		{	
+			menu.removeItem(R.id.menuItemCall);	
+		}
+		
+		
+		
+		
 	}
 	
 	
@@ -59,6 +77,11 @@ public class TodoListManagerActivity extends Activity {
 			break;
 		case R.id.menuItemCall:
 			Log.d("onContextItemSelected","Call, not supporeted currently"); //TODO: add support.
+			String actionDialTxt = (String) item.getTitle();
+			actionDialTxt = actionDialTxt.substring("Call ".length());
+			actionDialTxt = "tel:"+actionDialTxt;
+			Intent dial = new Intent(Intent.ACTION_DIAL, Uri.parse(actionDialTxt));
+			startActivity(dial);
 			break;
 		}
 		return true;
@@ -83,11 +106,6 @@ public class TodoListManagerActivity extends Activity {
 			Intent intent = new Intent(this, AddNewTodoItemActivity.class);
     		startActivityForResult(intent, 1337);
     		break;
-			
-//			EditText newTaskTodoView = (EditText)findViewById(R.id.edtNewItem);
-//			String newTaskTodo = newTaskTodoView.getText().toString();
-//			adapter.add(newTaskTodo);
-//			break;
 		}
 		return true;
 	}
@@ -97,7 +115,6 @@ public class TodoListManagerActivity extends Activity {
     	if (requestCode == 1337 && resultCode == RESULT_OK) {
     		String title = data.getStringExtra("title");
     		java.util.Date dueDate = (Date) data.getSerializableExtra("dueDate");
-    		
     		adapter.add(new TodoHolder(title, dueDate));
     	}
     	else
