@@ -52,7 +52,6 @@ public class TodoListManagerActivity extends Activity {
 		PushService.setDefaultPushCallback(this, TodoListManagerActivity.class);
 
 		ParseQuery query = new ParseQuery("todo");
-		//query.whereEqualTo("activity", "Walking");
 		query.findInBackground(new FindCallback() {
 			@Override
 			public void done(List<ParseObject> objects, ParseException exc) {
@@ -61,8 +60,14 @@ public class TodoListManagerActivity extends Activity {
 				} else {
 					for (ParseObject object : objects) {
 						String title = object.getString("title");
-						Date dueDate = new Date(object.getInt("due"));
-						adapter.add(new TodoHolder(title, dueDate));
+						Date dueDate = null;
+						if(!object.get("due").equals(null))
+						{
+							dueDate = new Date(object.getLong("due"));
+						}
+						TodoHolder todoItem = new TodoHolder(title, dueDate);
+						adapter.add(todoItem);
+						//helper.insert(todoItem);
 					}
 				}
 			}
@@ -137,8 +142,17 @@ public class TodoListManagerActivity extends Activity {
     		String title = data.getStringExtra("title");
     		java.util.Date dueDate = (Date) data.getSerializableExtra("dueDate");
     		TodoHolder tempTodoHolder = new TodoHolder(title, dueDate);
-    		adapter.add(tempTodoHolder);
-    		helper.insert(tempTodoHolder);
+    		
+    		if (!title.equals("yota"))
+    		{
+    			adapter.add(tempTodoHolder);
+    			helper.insert(tempTodoHolder);
+    		}
+    		else
+    		{
+    			helper.update(tempTodoHolder);
+    		}
+    		
     	}
     	else
     	{

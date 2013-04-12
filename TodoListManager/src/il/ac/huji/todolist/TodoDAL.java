@@ -3,6 +3,8 @@ package il.ac.huji.todolist;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -21,6 +23,7 @@ public class TodoDAL extends SQLiteOpenHelper {
 
 	private static final String DATA_BASE_NAME = "todo_db";
 	private static final String DB_TABLE_NAME = "todo";
+	private static final String PARSE_TABLE_NAME = "todo";
 
 	private SQLiteDatabase db;
 	//private Cursor cursor;
@@ -50,9 +53,15 @@ public class TodoDAL extends SQLiteOpenHelper {
 		values.put("due", (int)todoItem.getDueDate().getTime());
 		db.insert(DB_TABLE_NAME, null, values);
 
-		ParseObject parseObject = new ParseObject("todo");
+		ParseObject parseObject = new ParseObject(PARSE_TABLE_NAME);
 		parseObject.put("title", todoItem.getTitle());
-		parseObject.put("due", todoItem.getDueDate().getTime());
+		if(todoItem.getDueDate() == null){
+			parseObject.put("due", JSONObject.NULL);
+		}else{
+			parseObject.put("due", todoItem.getDueDate().getTime());
+		}
+
+
 		parseObject.saveInBackground();
 
 		return true;
@@ -63,14 +72,44 @@ public class TodoDAL extends SQLiteOpenHelper {
 		value.put("title", todoItem.getTitle());
 		value.put("due", (int)todoItem.getDueDate().getTime());
 
-		boolean output =  db.update(DB_TABLE_NAME, value, "title" + "=" + todoItem.getTitle(), null) > 0;
+		String[] whereClauseArgument = {todoItem.getTitle()};
+		boolean output =  db.update(DB_TABLE_NAME, value, "title" + "=?" , whereClauseArgument) > 0;
 		if(output)
 		{
+			final Date dueDate = todoItem.getDueDate();
+			
+			ParseQuery query = new ParseQuery(PARSE_TABLE_NAME);
+			query.whereStartsWith("title", todoItem.getTitle());
+			query.findInBackground(new FindCallback(){
 
-			ParseObject parseObject = new ParseObject("todo");
+				@Override
+				public void done(List<ParseObject> objects, ParseException e) {
+					objects.get(0).remove("due");
+					objects.get(0).deleteInBackground();
+					
+					if(dueDate == null){
+						objects.get(0).put("due", JSONObject.NULL);
+					}else{
+						objects.get(0).put("due", dueDate.getTime());
+					}
+
+
+					objects.get(0).saveInBackground();
+					
+				}
+			});
+			
+			
+			
+
+			ParseObject parseObject = new ParseObject(PARSE_TABLE_NAME);
 			parseObject.remove(todoItem.getTitle());
 			parseObject.put("title", todoItem.getTitle());
-			parseObject.put("due", todoItem.getDueDate().getTime());
+			if(todoItem.getDueDate() == null){
+				parseObject.put("due", JSONObject.NULL);
+			}else{
+				parseObject.put("due", todoItem.getDueDate().getTime());
+			}
 			parseObject.saveInBackground();
 		}
 		return output;
@@ -79,23 +118,17 @@ public class TodoDAL extends SQLiteOpenHelper {
 	public boolean delete(ITodoItem todoItem) {
 		String[] whereClauseArgument = {todoItem.getTitle()};
 		boolean output =  db.delete(DB_TABLE_NAME, "title =?", whereClauseArgument) > 0;
-		
-		final Date dueDate = todoItem.getDueDate();
 
 		if(output)
 		{
-			//	cursor.requery();
-			ParseQuery query = new ParseQuery("todo");
-			query.whereStartsWith("title", "");
+			ParseQuery query = new ParseQuery(PARSE_TABLE_NAME);
+			query.whereStartsWith("title", todoItem.getTitle());
 			query.findInBackground(new FindCallback(){
 
 				@Override
 				public void done(List<ParseObject> objects, ParseException e) {
 					objects.get(0).remove("title");
-					if(dueDate != null)
-					{
-						objects.get(0).remove("due");
-					}
+					objects.get(0).remove("due");
 					objects.get(0).deleteInBackground();
 				}
 			});
@@ -103,8 +136,8 @@ public class TodoDAL extends SQLiteOpenHelper {
 		return output;
 
 	}
-	
-		public List<ITodoItem> all() {
-			return null;
-		}
+
+	public List<ITodoItem> all() {
+		return null;
 	}
+}
