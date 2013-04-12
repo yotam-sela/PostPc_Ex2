@@ -29,10 +29,12 @@ public class TodoListManagerActivity extends Activity {
 
 	private ArrayAdapter<TodoHolder> adapter;
 	private TodoDAL helper;
+	private boolean dontCheckUpdate = true;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_todo_list_manager);
 	
@@ -46,11 +48,14 @@ public class TodoListManagerActivity extends Activity {
 		registerForContextMenu(todoListView);
 		
 		helper = new TodoDAL(this);
-		
-		Parse.initialize(this, "HBBBzwEoTLWFuwkZfwTz7ypV4D3m7mMd48VhBQvA", "35YHJgV830cK7msfxyqXFEf7kG0MChuEB3ClVwi0"); 
+		String appId = getString(R.string.parseApplication);
+		String clientKey = getString(R.string.clientKey);		
+		Parse.initialize(this, appId,clientKey); 
 		PushService.subscribe(this, "", TodoListManagerActivity.class);
 		PushService.setDefaultPushCallback(this, TodoListManagerActivity.class);
 
+		helper.deleteAll();
+		
 		ParseQuery query = new ParseQuery("todo");
 		query.findInBackground(new FindCallback() {
 			@Override
@@ -66,7 +71,7 @@ public class TodoListManagerActivity extends Activity {
 							dueDate = new Date(object.getLong("due"));
 						}
 						TodoHolder todoItem = new TodoHolder(title, dueDate);
-						adapter.add(todoItem);
+						adapter.add(todoItem);	 
 						helper.insertWitoutParser(todoItem);
 					}
 				}
@@ -143,7 +148,7 @@ public class TodoListManagerActivity extends Activity {
     		java.util.Date dueDate = (Date) data.getSerializableExtra("dueDate");
     		TodoHolder tempTodoHolder = new TodoHolder(title, dueDate);
     		
-    		if (!title.equals("3"))
+    		if (!title.equals("update") || dontCheckUpdate)
     		{
     			adapter.add(tempTodoHolder);
     			helper.insert(tempTodoHolder);

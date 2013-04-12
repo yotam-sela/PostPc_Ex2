@@ -9,5 +9,7 @@
     <string name="title_activity_add_new_todo_item">AddNewTodoItemActivity</string>
     <string name="cancel_button">Cancel</string>
     <string name="ok_button">OK</string>
+    <string name="parseApplication">HBBBzwEoTLWFuwkZfwTz7ypV4D3m7mMd48VhBQvA</string>
+    <string name="clientKey">35YHJgV830cK7msfxyqXFEf7kG0MChuEB3ClVwi0</string>
 
 </resources>
