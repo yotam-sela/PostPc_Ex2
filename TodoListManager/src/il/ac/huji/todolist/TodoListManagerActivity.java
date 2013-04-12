@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.parse.FindCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.PushService;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -22,7 +28,8 @@ import android.widget.ListView;
 public class TodoListManagerActivity extends Activity {
 
 	private ArrayAdapter<TodoHolder> adapter;
-
+	private TodoDAL helper;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,7 +44,29 @@ public class TodoListManagerActivity extends Activity {
 		todoListView.setAdapter(adapter);
 
 		registerForContextMenu(todoListView);
+		
+		helper = new TodoDAL(this);
+		
+		Parse.initialize(this, "HBBBzwEoTLWFuwkZfwTz7ypV4D3m7mMd48VhBQvA", "35YHJgV830cK7msfxyqXFEf7kG0MChuEB3ClVwi0"); 
+		PushService.subscribe(this, "", TodoListManagerActivity.class);
+		PushService.setDefaultPushCallback(this, TodoListManagerActivity.class);
 
+		ParseQuery query = new ParseQuery("todo");
+		//query.whereEqualTo("activity", "Walking");
+		query.findInBackground(new FindCallback() {
+			@Override
+			public void done(List<ParseObject> objects, ParseException exc) {
+				if (exc != null) {
+					exc.printStackTrace();
+				} else {
+					for (ParseObject object : objects) {
+						String title = object.getString("title");
+						Date dueDate = new Date(object.getInt("due"));
+						adapter.add(new TodoHolder(title, dueDate));
+					}
+				}
+			}
+		}); 
 	}
 
 	@Override
@@ -46,7 +75,7 @@ public class TodoListManagerActivity extends Activity {
 		
 		AdapterContextMenuInfo adapterInfo = (AdapterContextMenuInfo)info;		
 		int pos = adapterInfo.position;
-		String title = adapter.getItem(pos).title;
+		String title = adapter.getItem(pos).getTitle();
 		menu.setHeaderTitle(title);
 
 		if(title.startsWith("Call "))
@@ -67,7 +96,9 @@ public class TodoListManagerActivity extends Activity {
 		int selectedItemIndex = info.position;
 		switch (item.getItemId()){
 		case R.id.menuItemDelete:
-			adapter.remove(adapter.getItem(selectedItemIndex));
+			TodoHolder tempTodoHolder = adapter.getItem(selectedItemIndex);
+			adapter.remove(tempTodoHolder);
+			helper.delete(tempTodoHolder);
 			break;
 		case R.id.menuItemCall:
 			Log.d("onContextItemSelected","Call, not supporeted currently"); //TODO: add support.
@@ -105,7 +136,9 @@ public class TodoListManagerActivity extends Activity {
     	if (requestCode == 1337 && resultCode == RESULT_OK) {
     		String title = data.getStringExtra("title");
     		java.util.Date dueDate = (Date) data.getSerializableExtra("dueDate");
-    		adapter.add(new TodoHolder(title, dueDate));
+    		TodoHolder tempTodoHolder = new TodoHolder(title, dueDate);
+    		adapter.add(tempTodoHolder);
+    		helper.insert(tempTodoHolder);
     	}
     	else
     	{

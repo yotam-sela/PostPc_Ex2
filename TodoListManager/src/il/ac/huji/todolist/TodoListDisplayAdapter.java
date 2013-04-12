@@ -26,21 +26,21 @@ public class TodoListDisplayAdapter extends ArrayAdapter<TodoHolder> {
 		View view = inflater.inflate(R.layout.row, null);
 
 		TextView todoName = (TextView)view.findViewById(R.id.txtTodoTitle);
-		todoName.setText(todoTask.title);
+		todoName.setText(todoTask.getTitle());
 
 		TextView todoDate = (TextView)view.findViewById(
 				R.id.txtTodoDueDate);
-		if(todoTask.dueDate == null)
+		if(todoTask.getDueDate() == null)
 		{
 			todoDate.setText("No due date");
 		}
 		else
 		{
 			DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-			todoDate.setText(df.format(todoTask.dueDate));
+			todoDate.setText(df.format(todoTask.getDueDate()));
 
 			Date currentDate = new Date();
-			if(currentDate.after(todoTask.dueDate))
+			if(currentDate.after(todoTask.getDueDate()))
 			{
 				todoDate.setTextColor(Color.RED);
 				todoName.setTextColor(Color.RED);

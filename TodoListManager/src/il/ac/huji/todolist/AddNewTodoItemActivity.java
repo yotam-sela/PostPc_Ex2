@@ -26,10 +26,8 @@ public class AddNewTodoItemActivity extends Activity {
 			}
 		});
 		
-		
 		findViewById(R.id.btnOK).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				
 				EditText edtTodoName = (EditText)findViewById(R.id.edtNewItem);
 				String title = edtTodoName.getText().toString();
 				
@@ -39,7 +37,7 @@ public class AddNewTodoItemActivity extends Activity {
 				tempCalender.set(edtTodoDate.getYear(),edtTodoDate.getMonth(), edtTodoDate.getDayOfMonth());
 				java.util.Date dueDate = tempCalender.getTime();
 				
-				if (title == null || "".equals(title)) {
+				if (title == null || "".equals(title)){
 					setResult(RESULT_CANCELED);
 					finish();
 				} else {
@@ -52,6 +50,4 @@ public class AddNewTodoItemActivity extends Activity {
 			}
 		});
 	}
-
-
 }
