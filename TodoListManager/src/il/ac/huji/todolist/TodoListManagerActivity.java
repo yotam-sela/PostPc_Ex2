@@ -67,7 +67,7 @@ public class TodoListManagerActivity extends Activity {
 						}
 						TodoHolder todoItem = new TodoHolder(title, dueDate);
 						adapter.add(todoItem);
-						//helper.insert(todoItem);
+						helper.insertWitoutParser(todoItem);
 					}
 				}
 			}
@@ -143,7 +143,7 @@ public class TodoListManagerActivity extends Activity {
     		java.util.Date dueDate = (Date) data.getSerializableExtra("dueDate");
     		TodoHolder tempTodoHolder = new TodoHolder(title, dueDate);
     		
-    		if (!title.equals("yota"))
+    		if (!title.equals("3"))
     		{
     			adapter.add(tempTodoHolder);
     			helper.insert(tempTodoHolder);
