@@ -12,16 +12,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class TodoListDisplayAdapter extends ArrayAdapter<TodoHolder> {
+public class TodoListDisplayAdapter extends ArrayAdapter<ITodoItem> {
 
 	public TodoListDisplayAdapter(
-			TodoListManagerActivity activity, List<TodoHolder> todoList) {
+			TodoListManagerActivity activity, List<ITodoItem> todoList) {
 		super(activity, android.R.layout.activity_list_item, todoList);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		TodoHolder todoTask = getItem(position);
+		ITodoItem todoTask = getItem(position);
 		LayoutInflater inflater = LayoutInflater.from(getContext());
 		View view = inflater.inflate(R.layout.row, null);
 

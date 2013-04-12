@@ -63,10 +63,7 @@ public class TodoDAL extends SQLiteOpenHelper {
 		}else{
 			parseObject.put(DUE, todoItem.getDueDate().getTime());
 		}
-
-
 		parseObject.saveInBackground();
-		this.all();
 		return true;
 	}
 
@@ -94,10 +91,7 @@ public class TodoDAL extends SQLiteOpenHelper {
 					}else{
 						objects.get(0).put(DUE, dueDate.getTime());
 					}
-
-
 					objects.get(0).saveInBackground();
-
 				}
 			});
 			ParseObject parseObject = new ParseObject(PARSE_TABLE_NAME);
@@ -138,7 +132,6 @@ public class TodoDAL extends SQLiteOpenHelper {
 			});
 		}
 		return output;
-
 	}
 
 	public List<ITodoItem> all() {
@@ -150,10 +143,7 @@ public class TodoDAL extends SQLiteOpenHelper {
 				String title = curser.getString(1);
 				Date dueDate = new Date(curser.getLong(2));
 				TodoHolder todoHolder = new TodoHolder(title,dueDate);
-				output.add(todoHolder);
-
-				Log.i("all: ", "title: "+title + " date: "+dueDate.toString());
-				
+				output.add(todoHolder);	
 			} while (curser.moveToNext());
 		}
 		return output;
@@ -167,6 +157,23 @@ public class TodoDAL extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(TITLE, todoItem.getTitle());
 		values.put(DUE, todoItem.getDueDate().getTime());
-		db.insert(DB_TABLE_NAME, null, values);
+		
+		List<ITodoItem> dbList = this.all();
+		boolean contains = true;
+		for (ITodoItem iTodoItem : dbList) {
+			if(iTodoItem.getTitle().equals(todoItem.getTitle()))
+			{
+				contains = true;
+				break;
+			}
+		}
+		
+		if(contains)
+		{
+			Log.i("insertWitoutParse: ","title: "+todoItem.getTitle()+ " already exists.");
+		}
+		else{
+			db.insert(DB_TABLE_NAME, null, values);
+		}
 	}
 }

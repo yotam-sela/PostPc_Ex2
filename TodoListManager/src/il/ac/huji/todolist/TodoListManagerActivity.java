@@ -27,7 +27,7 @@ import android.widget.ListView;
 
 public class TodoListManagerActivity extends Activity {
 
-	private ArrayAdapter<TodoHolder> adapter;
+	private ArrayAdapter<ITodoItem> adapter;
 	private TodoDAL helper;
 	private boolean dontCheckUpdate = true;
 	
@@ -38,10 +38,11 @@ public class TodoListManagerActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_todo_list_manager);
 	
-		List<TodoHolder> todoList = new ArrayList<TodoHolder>();
+		List<ITodoItem> todoList = new ArrayList<ITodoItem>();
 
 		ListView todoListView = (ListView)findViewById(R.id.lstTodoItems);
 
+		
 		adapter = new TodoListDisplayAdapter(this,todoList);
 		todoListView.setAdapter(adapter);
 
@@ -50,11 +51,9 @@ public class TodoListManagerActivity extends Activity {
 		helper = new TodoDAL(this);
 		String appId = getString(R.string.parseApplication);
 		String clientKey = getString(R.string.clientKey);		
-		Parse.initialize(this, appId,clientKey); 
+		Parse.initialize(this, appId,clientKey);
 		PushService.subscribe(this, "", TodoListManagerActivity.class);
 		PushService.setDefaultPushCallback(this, TodoListManagerActivity.class);
-
-		helper.deleteAll();
 		
 		ParseQuery query = new ParseQuery("todo");
 		query.findInBackground(new FindCallback() {
@@ -71,8 +70,13 @@ public class TodoListManagerActivity extends Activity {
 							dueDate = new Date(object.getLong("due"));
 						}
 						TodoHolder todoItem = new TodoHolder(title, dueDate);
-						adapter.add(todoItem);	 
+							 
 						helper.insertWitoutParser(todoItem);
+					}
+					Log.i("Main Activety: ", "about to insert the list...");
+					List<ITodoItem> todoHolderList = helper.all();
+					for (ITodoItem todoHolder : todoHolderList) {
+						adapter.add(todoHolder);
 					}
 				}
 			}
@@ -106,7 +110,7 @@ public class TodoListManagerActivity extends Activity {
 		int selectedItemIndex = info.position;
 		switch (item.getItemId()){
 		case R.id.menuItemDelete:
-			TodoHolder tempTodoHolder = adapter.getItem(selectedItemIndex);
+			ITodoItem tempTodoHolder = adapter.getItem(selectedItemIndex);
 			adapter.remove(tempTodoHolder);
 			helper.delete(tempTodoHolder);
 			break;
